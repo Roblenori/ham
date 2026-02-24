@@ -13,57 +13,89 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
     <link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.5.0/css/responsive.dataTables.min.css">
-    <meta name="robots" content="noindex, nofollow">
-	
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    
     <style>
-        :root { --primary: #003366; --accent: #3182ce; --bg: #f7fafc; }
-        body { font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; background-color: var(--bg); padding: 10px; margin: 0; }
-        .main-container { max-width: 1600px; margin: auto; background: white; padding: 20px; border-radius: 16px; box-shadow: 0 10px 25px rgba(0,0,0,0.05); }
+        :root { --primary: #003366; --accent: #3182ce; --bg: #f7fafc; --white: #ffffff; }
+        body { font-family: 'Pretendard', -apple-system, sans-serif; background-color: var(--bg); padding: 10px; margin: 0; color: #1a202c; }
         
-        h2 { font-weight: 800; color: var(--primary); margin-bottom: 20px; letter-spacing: -1px; }
+        .main-container { max-width: 1600px; margin: auto; background: var(--white); padding: 25px; border-radius: 20px; box-shadow: 0 15px 35px rgba(0,0,0,0.08); }
+        @media (max-width: 768px) { .main-container { padding: 15px; border-radius: 0; } body { padding: 0; } }
+
+        h2 { font-weight: 800; color: var(--primary); margin-bottom: 25px; letter-spacing: -1px; }
         h2 small { font-size: 14px; color: #a0aec0; font-weight: 400; }
 
-        .brand-nav { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 20px; border-bottom: 2px solid #edf2f7; padding-bottom: 15px; }
-        .nav-btn { border: 2px solid #e2e8f0; background: white; color: #718096; font-weight: 700; border-radius: 10px; padding: 8px 18px; cursor: pointer; transition: 0.2s; font-size: 14px; }
-        .nav-btn.active { background: var(--primary); border-color: var(--primary); color: white; box-shadow: 0 4px 10px rgba(0,51,102,0.2); }
+        .brand-nav { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 25px; border-bottom: 2px solid #edf2f7; padding-bottom: 20px; }
+        .nav-btn { border: 2px solid #e2e8f0; background: var(--white); color: #718096; font-weight: 700; border-radius: 12px; padding: 10px 22px; cursor: pointer; transition: all 0.2s; font-size: 14px; }
+        .nav-btn.active { background: var(--primary); border-color: var(--primary); color: var(--white); box-shadow: 0 8px 15px rgba(0,51,102,0.2); }
 
-        .dataTables_wrapper .top-controls { display: flex; justify-content: flex-start; align-items: center; gap: 20px; flex-wrap: wrap; margin-bottom: 15px; }
-        .dataTables_wrapper .dataTables_length, .dataTables_wrapper .dataTables_filter { display: inline-flex; align-items: center; float: none !important; }
-        .dataTables_wrapper .dataTables_filter input { margin-left: 10px; border-radius: 8px; border: 1px solid #e2e8f0; padding: 5px 12px; width: 250px; }
-
-        table.dataTable { border-top: 2px solid var(--primary) !important; font-size: 13px; border-collapse: collapse !important; width: 100% !important; margin-top: 10px !important; }
-        table.dataTable thead th { background: #f8fafc !important; color: #4a5568 !important; font-weight: 700 !important; border-bottom: 1px solid #edf2f7 !important; padding: 12px 10px !important; text-align: left; }
-        table.dataTable tbody td { white-space: normal !important; word-break: break-all; vertical-align: middle !important; padding: 12px 8px !important; line-height: 1.4; border-bottom: 1px solid #f7fafc; }
-        table.dataTable tbody tr { cursor: pointer; transition: 0.15s; }
-        table.dataTable tbody tr:hover { background-color: #f1f8ff !important; }
+        /* --- 상단 컨트롤 레이아웃 수정: 검색창을 우측 끝으로 --- */
+        .dataTables_wrapper .top-controls { 
+            display: flex; 
+            justify-content: space-between; /* 양 끝 정렬 */
+            align-items: center; 
+            gap: 10px; 
+            margin-bottom: 20px; 
+        }
         
-        .badge-ui { display: inline-block; padding: 2px 8px; border-radius: 6px; font-size: 11px; font-weight: bold; color: white; margin-right: 5px; vertical-align: middle; margin-bottom: 2px; box-shadow: 0 1px 2px rgba(0,0,0,0.1); text-transform: uppercase; white-space: nowrap; }
-        .bg-win-11 { background-color: #0078d4; } .bg-win-10 { background-color: #00a4ef; } .bg-win-7 { background-color: #f25022; }
-        .bg-cpu-gen { background-color: #4a5568; }
-        .bg-ram-d5 { background-color: #2e7d32; } .bg-ram-d4 { background-color: #6a1b9a; } .bg-ram-d3 { background-color: #ef6c00; }
-        .bg-disk { background-color: #006064; }
-        .bg-port-hdmi { background-color: #d32f2f; } .bg-port-dp { background-color: #1976d2; } .bg-port-vga { background-color: #455a64; } .bg-port-edp { background-color: #388e3c; } .bg-port-dvi { background-color: #7b1fa2; }
-
-        .detail-pane { padding: 15px; background: #f8fafc; display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 15px; border-bottom: 2px solid #edf2f7; }
-        .spec-card { background: white; border-radius: 10px; padding: 18px; border: 1px solid #e2e8f0; box-shadow: 0 2px 5px rgba(0,0,0,0.02); }
-        .spec-card h6 { color: var(--accent); font-weight: 800; border-bottom: 2px solid #f1f5f9; padding-bottom: 8px; margin-bottom: 12px; font-size: 14px; }
-        .info-row { display: flex; font-size: 13px; margin-bottom: 8px; line-height: 1.5; }
-        .info-label { width: 100px; color: #718096; font-weight: 600; flex-shrink: 0; }
-        .info-value { color: #1a202c; flex: 1; word-break: break-all; }
-
-        .pci-trigger { cursor: pointer; color: #3182ce; font-weight: bold; display: inline-flex; align-items: center; gap: 4px; border: 1px solid #3182ce; padding: 2px 8px; border-radius: 4px; transition: 0.2s; background: white; margin-top: 2px; }
-        .pci-content { margin-top: 10px; padding: 12px; background: #edf2f7; border-radius: 8px; border-left: 4px solid #3182ce; font-size: 12px; line-height: 1.6; color: #2d3748; }
-        .pci-item { border-bottom: 1px dashed #cbd5e0; padding: 4px 0; }
+        .dataTables_length { margin: 0 !important; }
+        .dataTables_length select { border-radius: 8px; border: 1px solid #e2e8f0; padding: 5px 10px; font-weight: 600; cursor: pointer; }
+        
+        .dataTables_filter { margin: 0 !important; }
+        .dataTables_filter input { 
+            border-radius: 10px; 
+            border: 1px solid #e2e8f0; 
+            padding: 8px 15px; 
+            width: 250px; 
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.02); 
+        }
 
         @media (max-width: 768px) {
-            .main-container { padding: 15px; border-radius: 0; }
-            .dataTables_wrapper .dataTables_filter input { width: 100%; margin-left: 0; margin-top: 10px; }
-            #boardTable th:nth-child(4), #boardTable td:nth-child(4),
-            #boardTable th:nth-child(5), #boardTable td:nth-child(5),
-            #boardTable th:nth-child(6), #boardTable td:nth-child(6),
-            #boardTable th:nth-child(7), #boardTable td:nth-child(7),
-            #boardTable th:nth-child(8), #boardTable td:nth-child(8) { display: none !important; }
+            .dataTables_wrapper .top-controls { gap: 8px; }
+            .dataTables_filter input { width: 160px; } /* 모바일 너비 최적화 */
         }
+
+        .table-thumb { width: 60px; height: 45px; object-fit: contain; border-radius: 6px; border: 1px solid #e2e8f0; background: #fff; }
+        table.dataTable { border-top: 3px solid var(--primary) !important; font-size: 14px; width: 100% !important; margin-top: 15px !important; }
+        table.dataTable thead th { background: #f8fafc !important; color: #4a5568 !important; font-weight: 800 !important; padding: 15px 12px !important; text-align: left; border-bottom: 1px solid #edf2f7 !important; }
+        table.dataTable tbody td { vertical-align: middle !important; padding: 15px 10px !important; cursor: pointer; text-align: left; border-bottom: 1px solid #f7fafc; }
+        table.dataTable tbody tr:hover { background-color: #f1f8ff !important; transition: 0.15s; }
+
+        @media (max-width: 1024px) { .col-hide-tablet { display: none !important; } }
+        @media (max-width: 768px) { .col-hide-mobile { display: none !important; } }
+
+        .badge-ui { display: inline-block; padding: 3px 10px; border-radius: 8px; font-size: 11px; font-weight: 800; color: var(--white); margin-right: 5px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); text-transform: uppercase; }
+        .bg-win-11 { background: #0078d4; } .bg-win-10 { background: #00a4ef; }
+        .bg-cpu-gen { background: #4a5568; } .bg-ram-d5 { background: #2e7d32; } .bg-ram-d4 { background: #6a1b9a; }
+
+        .modal-content { border-radius: 24px; border: none; overflow: hidden; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25); }
+        .modal-header { background: var(--primary); color: var(--white); padding: 20px 30px; border: none; }
+        .modal-body { padding: 0; background: #f8fafc; }
+        .modal-grid { display: grid; grid-template-columns: 1fr 1.6fr; min-height: 500px; }
+        
+        .modal-image-area { background: #fff; display: flex; align-items: center; justify-content: center; padding: 30px; border-right: 1px solid #edf2f7; cursor: zoom-in; }
+        .modal-image-area img { max-width: 100%; border-radius: 12px; box-shadow: 0 10px 20px rgba(0,0,0,0.05); }
+
+        .modal-info-area { padding: 30px; overflow-y: auto; max-height: 80vh; display: flex; flex-direction: column; gap: 20px; }
+        .spec-group { background: white; border-radius: 18px; padding: 20px; border: 1px solid #f1f5f9; box-shadow: 0 4px 6px rgba(0,0,0,0.02); }
+        .spec-group h6 { color: var(--accent); font-weight: 800; margin-bottom: 15px; border-bottom: 2px solid #f8fafc; padding-bottom: 10px; display: flex; align-items: center; gap: 8px; }
+        
+        .spec-row { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #f8fafc; font-size: 14px; }
+        .spec-row:last-child { border-bottom: none; }
+        .spec-label { color: #718096; font-weight: 700; width: 140px; flex-shrink: 0; }
+        .spec-value { color: #1a202c; font-weight: 600; text-align: right; word-break: break-all; }
+
+        @media (max-width: 992px) {
+            .modal-grid { grid-template-columns: 1fr; }
+            .modal-image-area { border-right: none; border-bottom: 1px solid #edf2f7; min-height: 300px; padding: 20px; }
+            .modal-info-area { max-height: none; padding: 20px; }
+        }
+
+        #imageOverlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 10000; display: none; align-items: center; justify-content: center; cursor: zoom-out; backdrop-filter: blur(8px); }
+        #imageOverlay img { max-width: 95%; max-height: 95%; object-fit: contain; }
+
+        #floating-ui { position: fixed; bottom: 30px; right: 25px; display: flex; flex-direction: column; gap: 12px; z-index: 999; }
+        .float-btn { width: 55px; height: 55px; border-radius: 50%; border: none; display: flex; align-items: center; justify-content: center; font-size: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.2); cursor: pointer; transition: 0.2s; }
     </style>
 </head>
 <body>
@@ -79,177 +111,215 @@
         </div>
     </header>
 
-    <table id="boardTable" class="display responsive nowrap w-100">
+    <table id="boardTable" class="display nowrap w-100">
         <thead>
             <tr>
-                <th>모델명</th><th>OS</th><th>CPU 통합 사양</th><th>메모리</th>
-                <th>SATA</th><th>M.2 / mSATA</th><th>디스플레이</th><th>온도</th>
+                <th>미리보기</th>
+                <th>모델명</th>
+                <th>OS</th>
+                <th class="col-hide-mobile">CPU 통합 사양</th>
+                <th class="col-hide-mobile col-hide-tablet">메모리</th>
+                <th class="col-hide-mobile col-hide-tablet">SATA</th>
+                <th class="col-hide-mobile col-hide-tablet">M.2 / mSATA</th>
+                <th class="col-hide-mobile col-hide-tablet">디스플레이</th>
+                <th class="col-hide-mobile col-hide-tablet">온도</th>
             </tr>
         </thead>
     </table>
 </div>
 
+<div class="modal fade" id="specModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-xl modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalTitle" style="font-weight: 800;">BOARD SPECIFICATION</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="modal-grid">
+                    <div class="modal-image-area" id="modalImageArea" title="클릭하여 크게 보기">
+                        <img src="" alt="Board Image" id="targetImage" onerror="this.src='https://placehold.co/600x400?text=No+Image'">
+                    </div>
+                    <div class="modal-info-area" id="modalInfoArea"></div>
+                </div>
+            </div>
+            <div class="modal-footer" style="background: white; border-top: 1px solid #f1f5f9;">
+                <button type="button" class="btn btn-secondary rounded-pill px-4" data-bs-dismiss="modal">닫기</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="imageOverlay">
+    <img src="" id="zoomedImage">
+</div>
+
 <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
-<script src="https://cdn.datatables.net/responsive/2.5.0/js/dataTables.responsive.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
 
 <script>
-    const CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQKipmCgb11JIbQnSHw1CbAVAhcA24MEmxp-Spg6ozdL8TX1Bm0AvS8wihRCbLiRNDhKUqWC32PT9pm/pub?output=csv';
+    const CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQKipmCgb11JIbQnSHw1CbAVAhcA24MEmxp-Spg6ozdL8TX1Bm0AvS8wihRCbLiRNDhKUqWC32PT9pm/pub?gid=1436169204&output=csv';
     let mainTable;
     let cachedData = [];
 
-    // 헬퍼 함수들 (parseAndRender, renderPCIe, makeDetailView)
-function parseAndRender(text, type) {
-    if (!text || text === '-' || text === 'nan') return '<span>-</span>';
-    let val = text.toUpperCase();
-    let badgeHtml = "";
-    let cleanText = text;
-
-    if (type === 'OS') {
-        let osBadges = [];
-        if (val.includes('11')) osBadges.push(`<span class="badge-ui bg-win-11">11</span>`);
-        if (val.includes('10')) osBadges.push(`<span class="badge-ui bg-win-10">10</span>`);
-        if (val.includes('7')) osBadges.push(`<span class="badge-ui bg-win-7">7</span>`);
-        badgeHtml = osBadges.join('');
-        cleanText = ""; 
-    } 
-    else if (type === 'MEM') {
-        if (val.includes('DDR5') || val.includes('D5')) badgeHtml = `<span class="badge-ui bg-ram-d5">DDR5</span>`;
-        else if (val.includes('DDR4') || val.includes('D4')) badgeHtml = `<span class="badge-ui bg-ram-d4">DDR4</span>`;
-        else if (val.includes('DDR3') || val.includes('D3')) badgeHtml = `<span class="badge-ui bg-ram-d3">DDR3</span>`;
-        cleanText = text.replace(/DDR\d/gi, "").replace(/D\d/gi, "").replace(/x/gi, "").trim();
+    function convertDriveLink(url) {
+        if (!url || url === '-' || url === 'nan' || String(url).trim() === '') return '';
+        const raw = String(url).trim();
+        let fileId = '';
+        if (raw.includes('drive.google.com')) {
+            const match = raw.match(/\/d\/([a-zA-Z0-9_-]+)/) || raw.match(/id=([a-zA-Z0-9_-]+)/);
+            if (match) fileId = match[1];
+        } else if (!raw.includes(' ') && raw.length > 20) { fileId = raw; }
+        return fileId ? `https://lh3.googleusercontent.com/u/0/d/${fileId}` : raw;
     }
-    else if (type === 'STORAGE') {
-        let badges = [];
-        let tempText = text;
-        // 1 x M.2 같은 패턴을 찾아서 배지로 만듭니다.
-        let matches = text.match(/(\d\s*x\s*(M\.2|mSATA))/gi);
-        if (matches) {
-            matches.forEach(m => {
-                badges.push(`<span class="badge-ui bg-disk">${m.trim()}</span>`);
-                tempText = tempText.replace(m, "");
-            });
+
+    function getVal(row, key) {
+        if (!row || !row[key] || row[key] === 'nan' || row[key] === '-') return '-';
+        return row[key];
+    }
+
+    function parseAndRender(text, type) {
+        if (!text || text === '-' || text === 'nan') return '<span>-</span>';
+        let val = String(text).toUpperCase();
+        if (type === 'OS') {
+            let html = "";
+            if (val.includes('11')) html += `<span class="badge-ui bg-win-11">W11</span>`;
+            if (val.includes('10')) html += `<span class="badge-ui bg-win-10">W10</span>`;
+            return html || text;
+        } else if (type === 'MEM') {
+            let badge = val.includes('D5') ? `<span class="badge-ui bg-ram-d5">DDR5</span>` : (val.includes('D4') ? `<span class="badge-ui bg-ram-d4">DDR4</span>` : "");
+            return badge + String(text).replace(/DDR\d/gi, "").trim();
         }
-        badgeHtml = badges.join('');
-        // ★ 여기서 슬래시(/)가 사라지지 않게 콤마(,)만 지우도록 수정했습니다.
-        cleanText = tempText.replace(/[,]/g, "").trim(); 
+        return text;
     }
-    else if (type === 'DISP') {
-        let badges = [];
-        if (val.includes('HDMI')) badges.push(`<span class="badge-ui bg-port-hdmi">HDMI</span>`);
-        if (val.includes('DP')) badges.push(`<span class="badge-ui bg-port-dp">DP</span>`);
-        if (val.includes('VGA')) badges.push(`<span class="badge-ui bg-port-vga">VGA</span>`);
-        if (val.includes('DVI')) badges.push(`<span class="badge-ui bg-port-dvi">DVI</span>`);
-        if (val.includes('LVDS') || val.includes('EDP')) badges.push(`<span class="badge-ui bg-port-edp">LVDS/eDP</span>`);
-        badgeHtml = badges.join('');
-        cleanText = "";
-    }
-    return badgeHtml + (cleanText ? ` <span style="margin-left:5px;">${cleanText}</span>` : "");
-}
 
-    function renderPCIe(data) {
-        if (!data || data === '-') return '<span style="color:#a0aec0">미지원</span>';
-        const items = data.split('\n').filter(i => i.trim() !== '');
-        let itemsHtml = items.map(i => `<div class="pci-item">• ${i.trim()}</div>`).join('');
-        return `
-            <div class="pci-wrapper">
-                <div class="pci-trigger" onclick="togglePci(this, event)">지원 <small>▼</small></div>
-                <div class="pci-content" style="display:none;">${itemsHtml}</div>
+    function openSpecModal(d) {
+        $('#modalTitle').text(`[${getVal(d, 'brand')}] ${getVal(d, 'name')}`);
+        const imgUrl = convertDriveLink(getVal(d, 'image_url'));
+        $('#targetImage').attr('src', imgUrl || 'https://placehold.co/600x400?text=No+Image');
+
+        const infoHtml = `
+            <div class="spec-group">
+                <h6><i class="fas fa-microchip"></i> 프로세서 및 기본 사양</h6>
+                <div class="spec-row"><span class="spec-label">CPU 상세</span><span class="spec-value">${getVal(d, 'cpu_detail')}</span></div>
+                <div class="spec-row"><span class="spec-label">CPU 세대</span><span class="spec-value">${getVal(d, 'cpu_gen')}th Gen</span></div>
+                <div class="spec-row"><span class="spec-label">소켓 / 코어</span><span class="spec-value">${getVal(d, 'socket')} / ${getVal(d, 'core')}</span></div>
+                <div class="spec-row"><span class="spec-label">지원 OS</span><span class="spec-value">${getVal(d, 'os')}</span></div>
+                <div class="spec-row"><span class="spec-label">동작 온도</span><span class="spec-value text-danger fw-bold">${getVal(d, 'temp')}</span></div>
+            </div>
+
+            <div class="spec-group">
+                <h6><i class="fas fa-memory"></i> 메모리 및 저장장치</h6>
+                <div class="spec-row"><span class="spec-label">메모리</span><span class="spec-value">${getVal(d, 'memory')}</span></div>
+                <div class="spec-row"><span class="spec-label">SATA 포트</span><span class="spec-value">${getVal(d, 'storage_sata')} EA</span></div>
+                <div class="spec-row"><span class="spec-label">M.2 / mSATA</span><span class="spec-value">${getVal(d, 'storage_m2')}</span></div>
+            </div>
+
+            <div class="spec-group">
+                <h6><i class="fas fa-plug"></i> 입출력 인터페이스</h6>
+                <div class="spec-row"><span class="spec-label">디스플레이</span><span class="spec-value">${getVal(d, 'display')}</span></div>
+                <div class="spec-row"><span class="spec-label">네트워크 (LAN)</span><span class="spec-value">${getVal(d, 'lan')}</span></div>
+                <div class="spec-row"><span class="spec-label">USB (Rear)</span><span class="spec-value">${getVal(d, 'usb')}</span></div>
+                <div class="spec-row"><span class="spec-label">USB (Internal)</span><span class="spec-value">${getVal(d, 'usb_ext')}</span></div>
+                <div class="spec-row"><span class="spec-label">COM 포트</span><span class="spec-value">${getVal(d, 'com')}</span></div>
+                <div class="spec-row"><span class="spec-label">오디오 잭</span><span class="spec-value">${getVal(d, 'audio_jack')}</span></div>
+                <div class="spec-row"><span class="spec-label">오디오 스피커</span><span class="spec-value">${getVal(d, 'audio_spk')}</span></div>
+            </div>
+
+            <div class="spec-group">
+                <h6><i class="fas fa-expand-arrows-alt"></i> 확장 슬롯 상세</h6>
+                <div class="spec-row"><span class="spec-label">M.2 확장</span><span class="spec-value">${getVal(d, 'expansion_m2')}</span></div>
+                <div class="spec-row"><span class="spec-label">mPCIe 확장</span><span class="spec-value">${getVal(d, 'expansion_mpcie')}</span></div>
+                <div class="spec-row"><span class="spec-label">PCI(e) 슬롯</span><span class="spec-value" style="text-align:left;">${getVal(d, 'expansion_pci').replace(/\n/g, '<br>')}</span></div>
+            </div>
+
+            <div class="spec-group" style="border-left: 5px solid #ed8936;">
+                <h6 style="color:#ed8936;"><i class="fas fa-sticky-note"></i> 메모 (Memo)</h6>
+                <div style="font-size: 14px; line-height: 1.6; color: #4a5568; white-space: pre-wrap;">${getVal(d, 'memo')}</div>
             </div>
         `;
+        $('#modalInfoArea').html(infoHtml);
+        new bootstrap.Modal('#specModal').show();
     }
 
-    window.togglePci = function(el, event) {
-        event.stopPropagation();
-        const content = $(el).next('.pci-content');
-        content.slideToggle(200);
-        $(el).find('small').text(content.is(':visible') ? '▲' : '▼');
-    };
-
-    function makeDetailView(d) {
-        const speakerText = (d.audio_spk && d.audio_spk !== '-') ? d.audio_spk : '<span class="text-danger">미지원</span>';
-        return `
-            <div class="detail-pane">
-                <div class="spec-card">
-                    <h6>🚀 성능 정보 (${d.cpu_gen || '-'}세대)</h6>
-                    <div class="info-row"><span class="info-label">CPU 상세</span><span class="info-value">${d.cpu_detail || '-'}</span></div>
-                    <div class="info-row"><span class="info-label">소켓/코어</span><span class="info-value">${d.socket || '-'} / ${d.core || '-'}</span></div>
-                    <div class="info-row"><span class="info-label">메모리</span><span class="info-value">${d.memory || '-'}</span></div>
-                    <div class="info-row"><span class="info-label text-danger">동작 온도</span><span class="info-value fw-bold text-danger">${d.temp || '-'}</span></div>
-                </div>
-                <div class="spec-card">
-                    <h6>💾 저장 및 확장</h6>
-                    <div class="info-row"><span class="info-label">SATA 포트</span><span class="info-value">${d.storage_sata || '-'} EA</span></div>
-                    <div class="info-row"><span class="info-label">M.2/mSATA</span><span class="info-value">${d.storage_m2 || '-'}</span></div>
-                    <div class="info-row"><span class="info-label">PCI(e) 상세</span><span class="info-value">${renderPCIe(d.expansion_pci)}</span></div>
-                </div>
-                <div class="spec-card">
-                    <h6>🔌 입출력 및 환경</h6>
-                    <div class="info-row"><span class="info-label text-primary">디스플레이</span><span class="info-value fw-bold text-primary">${d.display || '-'}</span></div>
-                    <div class="info-row"><span class="info-label">오디오</span><span class="info-value">${d.audio_jack || '잭 미지원'} / ${speakerText}</span></div>
-                    <div class="info-row"><span class="info-label">USB/COM</span><span class="info-value">${d.usb || '-'} / ${d.com || '-'}</span></div>
-                </div>
-            </div>
-        `;
-    }
-
-    // 데이터 로드 및 테이블 초기화
     $(document).ready(function() {
+        $('#modalImageArea').on('click', function() {
+            const src = $('#targetImage').attr('src');
+            if(src && !src.includes('placehold')) {
+                $('#zoomedImage').attr('src', src);
+                $('#imageOverlay').fadeIn(200).css('display', 'flex');
+            }
+        });
+        $('#imageOverlay').on('click', () => $('#imageOverlay').fadeOut(200));
+
         Papa.parse(CSV_URL, {
             download: true,
             header: true,
+            skipEmptyLines: true,
             complete: function(results) {
-                cachedData = results.data;
+                cachedData = results.data.filter(r => r.name);
                 mainTable = $('#boardTable').DataTable({
                     data: cachedData,
-                    responsive: { details: false },
                     dom: '<"top-controls"lf>rtip',
                     pageLength: 50,
-                    columnDefs: [{
-                        targets: '_all',
-                        render: function(data, type, row) {
-                            if (type === 'filter') return Object.values(row).join(' ');
-                            return data;
-                        }
-                    }],
+                    order: [[1, 'asc']],
                     columns: [
+                        { 
+                            data: "image_url",
+                            orderable: false,
+                            render: d => `<img src="${convertDriveLink(d)}" class="table-thumb" onerror="this.src='https://placehold.co/100x75?text=No+Pic'">`
+                        },
                         { data: "name", className: "fw-bold text-primary" },
                         { data: "os", render: d => parseAndRender(d, 'OS') },
-                        { data: "cpu_detail", render: (d, t, r) => `<span class="badge-ui bg-cpu-gen">${r.cpu_gen}th</span> ${d}` },
-                        { data: "memory", render: d => parseAndRender(d, 'MEM') },
-                        { data: "storage_sata" },
-                        { data: "storage_m2", render: d => parseAndRender(d, 'STORAGE') },
-                        { data: "display", render: d => parseAndRender(d, 'DISP') },
-                        { data: "temp", className: "text-danger fw-bold" }
+                        { data: "cpu_detail", className: "col-hide-mobile", render: (d, t, r) => `<span class="badge-ui bg-cpu-gen">${r.cpu_gen}th</span> ${d}` },
+                        { data: "memory", className: "col-hide-mobile col-hide-tablet", render: d => parseAndRender(d, 'MEM') },
+                        { data: "storage_sata", className: "col-hide-mobile col-hide-tablet" },
+                        { data: "storage_m2", className: "col-hide-mobile col-hide-tablet" },
+                        { data: "display", className: "col-hide-mobile col-hide-tablet" },
+                        { data: "temp", className: "col-hide-mobile col-hide-tablet text-danger fw-bold" }
                     ],
-                    language: { search: "🔍 통합 검색: ", lengthMenu: "_MENU_개씩 보기", info: "전체 _TOTAL_개 모델" }
+                    language: { 
+                        search: "🔍", 
+                        lengthMenu: "_MENU_", 
+                        info: "총 _TOTAL_개 모델" 
+                    }
                 });
 
                 $('#updateDate').text('(' + new Date().toLocaleDateString() + ' 기준)');
-
-                // 이벤트 바인딩
-                $('.nav-btn').on('click', function() {
-                    $('.nav-btn').removeClass('active');
-                    $(this).addClass('active');
-                    const brand = $(this).data('brand');
-                    $.fn.dataTable.ext.search.pop();
-                    if (brand !== 'all') {
-                        $.fn.dataTable.ext.search.push((settings, data, dataIndex) => cachedData[dataIndex].brand === brand);
-                    }
-                    mainTable.draw();
+                $('#boardTable tbody').on('click', 'tr', function () {
+                    const row = mainTable.row(this).data();
+                    if(row) openSpecModal(row);
                 });
 
-                $('#boardTable tbody').on('click', 'tr', function (e) {
-                    if ($(e.target).closest('.pci-wrapper, .pci-trigger').length) return;
-                    const tr = $(this);
-                    const row = mainTable.row(tr);
-                    if (row.child.isShown()) { row.child.hide(); tr.removeClass('shown shadow-sm'); }
-                    else { row.child(makeDetailView(row.data())).show(); tr.addClass('shown shadow-sm'); }
+                $('.nav-btn').on('click', function() {
+                    $('.nav-btn').removeClass('active'); $(this).addClass('active');
+                    const b = $(this).data('brand');
+                    $.fn.dataTable.ext.search.pop();
+                    if(b !== 'all') { $.fn.dataTable.ext.search.push((s, d, i) => cachedData[i].brand === b); }
+                    mainTable.draw();
                 });
             }
         });
     });
 </script>
+
+<div id="floating-ui">
+    <button type="button" class="float-btn" id="scrollTopBtn" style="background:white; color:#003366; display:none;" onclick="window.scrollTo({top:0, behavior:'smooth'})">
+        <i class="fas fa-arrow-up"></i>
+    </button>
+    <button type="button" class="float-btn" style="background:#003366; color:white;" onclick="location.reload()">
+        <i class="fas fa-sync-alt"></i>
+    </button>
+</div>
+
+<script>
+    $(window).scroll(function() {
+        if ($(this).scrollTop() > 300) $('#scrollTopBtn').fadeIn();
+        else $('#scrollTopBtn').fadeOut();
+    });
+</script>
+
 </body>
 </html>
